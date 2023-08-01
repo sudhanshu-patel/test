@@ -1,0 +1,132 @@
+import subprocess
+
+def run_adb_command(command):
+    """
+    Function to run ADB command and return the output.
+    """
+    try:
+        result = subprocess.run(command.split(), capture_output=True, text=True)
+        return result.stdout.strip()
+    except FileNotFoundError:
+        return "Error: ADB not found. Please ensure ADB is installed and added to your system PATH."
+
+def list_devices():
+    """
+    List connected devices/emulators.
+    """
+    return run_adb_command("adb devices")
+
+def get_device_info():
+    """
+    Get various device information.
+    """
+    return run_adb_command("adb shell getprop")
+
+def install_apk(apk_path):
+    """
+    Install an APK on the connected device.
+    """
+    return run_adb_command(f"adb install {apk_path}")
+
+def uninstall_package(package_name):
+    """
+    Uninstall an app by package name from the connected device.
+    """
+    return run_adb_command(f"adb uninstall {package_name}")
+
+def reboot_device():
+    """
+    Reboot the connected device.
+    """
+    return run_adb_command("adb reboot")
+
+def take_screenshot(output_path):
+    """
+    Take a screenshot and save it to the specified output path.
+    """
+    return run_adb_command(f"adb shell screencap -p {output_path}")
+
+def pull_file(device_path, local_path):
+    """
+    Pull a file from the device to the local machine.
+    """
+    return run_adb_command(f"adb pull {device_path} {local_path}")
+
+def push_file(local_path, device_path):
+    """
+    Push a file from the local machine to the device.
+    """
+    return run_adb_command(f"adb push {local_path} {device_path}")
+
+def enable_wifi():
+    """
+    Enable Wi-Fi on the device.
+    """
+    return run_adb_command("adb shell svc wifi enable")
+
+def disable_wifi():
+    """
+    Disable Wi-Fi on the device.
+    """
+    return run_adb_command("adb shell svc wifi disable")
+
+if __name__ == "__main__":
+    print("Welcome to the simplified ADB script!")
+
+    while True:
+        print("\nAvailable options:")
+        print("1. List connected devices")
+        print("2. Get device information")
+        print("3. Install an APK")
+        print("4. Uninstall an app")
+        print("5. Reboot device")
+        print("6. Take a screenshot")
+        print("7. Pull a file from the device")
+        print("8. Push a file to the device")
+        print("9. Enable Wi-Fi")
+        print("10. Disable Wi-Fi")
+        print("0. Exit")
+
+        choice = input("Enter the option number: ")
+
+        if choice == "1":
+            devices_output = list_devices()
+            print(devices_output)
+        elif choice == "2":
+            device_info_output = get_device_info()
+            print(device_info_output)
+        elif choice == "3":
+            apk_path = input("Enter the path to the APK file: ")
+            install_output = install_apk(apk_path)
+            print(install_output)
+        elif choice == "4":
+            package_name = input("Enter the package name of the app to uninstall: ")
+            uninstall_output = uninstall_package(package_name)
+            print(uninstall_output)
+        elif choice == "5":
+            reboot_output = reboot_device()
+            print(reboot_output)
+        elif choice == "6":
+            output_path = input("Enter the path to save the screenshot: ")
+            screenshot_output = take_screenshot(output_path)
+            print(screenshot_output)
+        elif choice == "7":
+            device_path = input("Enter the path of the file on the device: ")
+            local_path = input("Enter the local path to save the file: ")
+            pull_output = pull_file(device_path, local_path)
+            print(pull_output)
+        elif choice == "8":
+            local_path = input("Enter the local path of the file to push: ")
+            device_path = input("Enter the path on the device to save the file: ")
+            push_output = push_file(local_path, device_path)
+            print(push_output)
+        elif choice == "9":
+            wifi_enable_output = enable_wifi()
+            print(wifi_enable_output)
+        elif choice == "10":
+            wifi_disable_output = disable_wifi()
+            print(wifi_disable_output)
+        elif choice == "0":
+            break
+        else:
+            print("Invalid option. Please try again.")
